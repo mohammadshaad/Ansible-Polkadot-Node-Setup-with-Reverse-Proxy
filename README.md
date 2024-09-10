@@ -23,7 +23,7 @@ This repository provides Ansible playbooks for setting up a Polkadot full node a
 
    ```ini
    [node1]
-   node1 ansible_host=3.82.191.60 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=luganodes.pem
+   node1 ansible_host=[your-host] ansible_ssh_user=ubuntu ansible_ssh_private_key_file=[.pem file path]
    ```
 
 3. **Setup Polkadot Full Node**
