@@ -56,8 +56,5 @@ This repository provides Ansible playbooks for setting up a Polkadot full node a
 - Configures Nginx to proxy requests to the Polkadot node.
 - Enables and restarts Nginx with the new configuration.
 
-## Troubleshooting
-
-- Ensure the SSH key file (`luganodes.pem`) has the correct permissions (`chmod 400 luganodes.pem`).
-- Check the logs at `/home/ubuntu/polkadot.log` for any issues with the Polkadot node.
-- Verify the Nginx configuration with `nginx -t` and check the Nginx logs if you encounter issues.
+## Output
+<img width="1440" alt="Screenshot 2024-09-10 at 10 09 16 PM" src="https://github.com/user-attachments/assets/3de5b44b-1f9d-472d-b074-ae8316fb0e38">
