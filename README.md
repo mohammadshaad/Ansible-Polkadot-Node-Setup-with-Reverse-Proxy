@@ -61,3 +61,6 @@ This repository provides Ansible playbooks for setting up a Polkadot full node a
 ![image](https://github.com/user-attachments/assets/414ead5c-5bb4-4925-81d2-6caaae909138)
 
 <img width="1440" alt="Screenshot 2024-09-10 at 10 09 16 PM" src="https://github.com/user-attachments/assets/3de5b44b-1f9d-472d-b074-ae8316fb0e38">
+
+![image](https://github.com/user-attachments/assets/40e80bf9-def9-457d-bc3a-c4490a72008f)
+
