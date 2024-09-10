@@ -1,5 +1,5 @@
-- name: Setup Nginx Reverse Proxy for Polkadot
-  hosts: all
+- name: Setup Reverse Proxy for Polkadot Node
+  hosts: localhost
   become: yes
   tasks:
     - name: Install Nginx
@@ -8,38 +8,31 @@
         state: present
         update_cache: yes
 
-    - name: Remove default Nginx configuration
-      file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-
-    - name: Create Nginx configuration for Polkadot
+    - name: Configure Nginx reverse proxy
       copy:
         dest: /etc/nginx/sites-available/polkadot
         content: |
           server {
               listen 80;
 
-              location / {
-                  proxy_pass http://localhost:9933;  # Update with your Polkadot RPC port
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection 'upgrade';
+              location /rpc {
+                  proxy_pass http://localhost:9944/;
                   proxy_set_header Host $host;
-                  proxy_cache_bypass $http_upgrade;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
               }
 
-              location /ws/ {
-                  proxy_pass http://localhost:9944;  # WebSocket port
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection 'upgrade';
+              location /metrics {
+                  proxy_pass http://localhost:9615/;
                   proxy_set_header Host $host;
-                  proxy_cache_bypass $http_upgrade;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
               }
           }
 
-    - name: Enable Nginx configuration for Polkadot
+    - name: Enable Nginx site configuration
       file:
         src: /etc/nginx/sites-available/polkadot
         dest: /etc/nginx/sites-enabled/polkadot
@@ -48,13 +41,8 @@
     - name: Test Nginx configuration
       command: nginx -t
 
-    - name: Reload Nginx to apply changes
-      systemd:
+    - name: Restart Nginx
+      service:
         name: nginx
-        state: reloaded
-
-    - name: Start and enable Nginx service
-      systemd:
-        name: nginx
+        state: restarted
         enabled: yes
-        state: started
