@@ -1,51 +1,21 @@
 - name: Setup Polkadot Full Node
-  hosts: all
+  hosts: localhost
   become: yes
   tasks:
     - name: Install required packages
       apt:
         name:
-          - git
+          - wget
           - curl
-          - build-essential
-          - pkg-config
-          - libssl-dev
-          - libclang-dev
-          - llvm
-          - libudev-dev
-          - cmake
-          - libgmp-dev
         state: present
         update_cache: yes
 
-    - name: Download Polkadot built binary
+    - name: Download Polkadot binary
       get_url:
         url: https://github.com/paritytech/polkadot/releases/download/v1.0.0/polkadot
         dest: /usr/local/bin/polkadot
         mode: '0755'
 
-    - name: Verify Polkadot binary download
-      stat:
-        path: /usr/local/bin/polkadot
-
-    - name: Create systemd service for Polkadot
-      copy:
-        dest: /etc/systemd/system/polkadot.service
-        content: |
-          [Unit]
-          Description=Polkadot Node
-          After=network.target
-
-          [Service]
-          ExecStart=/usr/local/bin/polkadot --chain=kusama
-          Restart=always
-          User=root
-
-          [Install]
-          WantedBy=multi-user.target
-
-    - name: Start and enable Polkadot service
-      systemd:
-        name: polkadot
-        enabled: yes
-        state: started
+    - name: Start Polkadot node with warp sync
+      shell: |
+        nohup /usr/local/bin/polkadot --sync warp > /home/ubuntu/polkadot.log 2>&1 &
